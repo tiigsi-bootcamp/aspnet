@@ -1,0 +1,1 @@
+record LoginInfo(string UserName, string Password);
