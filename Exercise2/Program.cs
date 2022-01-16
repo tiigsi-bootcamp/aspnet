@@ -16,6 +16,8 @@ var doctors = new List<Doctor>
 	new Doctor(2, "Test Test", "Testing")
 };
 
+var patients = new List<Patient>();
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
@@ -63,5 +65,65 @@ app.MapDelete("/doctors/{id}", (int id) =>
 	doctors.RemoveAt(index);
 	return Results.NoContent();
 });
+
+// GET /patients
+app.MapGet("/patients", () => patients);
+
+// GET /patients/5
+app.MapGet("/patients/{id}", (int id) =>
+{
+	var patient = patients.FirstOrDefault(p => p.Id == id);
+	if (patient is null)
+	{
+		return Results.NotFound();
+	}
+
+	return Results.Ok(patient);
+});
+
+// POST /patients
+app.MapPost("/patients", (Patient patient) =>
+{
+	patient.Id = patients.Count + 1;
+	patients.Add(patient);
+
+	return Results.Created("/patients/" + patient.Id, patient);
+});
+
+// PUT /patients/5
+app.MapPut("/patients/{id}", (int id, Patient patient) =>
+{
+	var targetPatient = patients.FirstOrDefault(p => p.Id == id);
+	if (targetPatient is null)
+	{
+		return Results.BadRequest("Patient could not be recognized.");
+	}
+
+	targetPatient.Name = patient.Name;
+	targetPatient.Address = patient.Address;
+	targetPatient.Phone = patient.Phone;
+
+	return Results.NoContent();
+});
+
+// DELETE /patients/5
+app.MapDelete("/patients/{id}", (int id) =>
+{
+	var patient = patients.FirstOrDefault(p => p.Id == id);
+	if (patient is null)
+	{
+		return Results.BadRequest("Patient could not be recognized.");
+	}
+
+	patients.Remove(patient);
+	return Results.NoContent();
+});
+
+// Drug: Id, Name, Quantity, Description, Origin, Price
+// GET /drugs
+// GET /drugs/5
+// POST /drugs
+// PUT /drugs/5
+// DELETE /drugs/5
 
 app.Run();
