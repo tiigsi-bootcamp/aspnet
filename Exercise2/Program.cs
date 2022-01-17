@@ -135,4 +135,6 @@ app.MapPut("/drugs/{id}", DrugHandler.UpdateDrug);
 // DELETE /drugs/5
 app.MapDelete("/drugs/{id}", DrugHandler.DeleteDrug);
 
+// TODO: Refactor the other endpoints.
+
 app.Run();
