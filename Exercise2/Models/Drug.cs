@@ -1,0 +1,1 @@
+record Drug(int Id, string Name, int Quantity);

@@ -121,9 +121,18 @@ app.MapDelete("/patients/{id}", (int id) =>
 
 // Drug: Id, Name, Quantity, Description, Origin, Price
 // GET /drugs
+app.MapGet("/drugs", DrugHandler.GetDrugs);
+
 // GET /drugs/5
+app.MapGet("/drugs/{id}", DrugHandler.GetDrug);
+
 // POST /drugs
+app.MapPost("/drugs", DrugHandler.AddDrug);
+
 // PUT /drugs/5
+app.MapPut("/drugs/{id}", DrugHandler.UpdateDrug);
+
 // DELETE /drugs/5
+app.MapDelete("/drugs/{id}", DrugHandler.DeleteDrug);
 
 app.Run();
