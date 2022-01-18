@@ -10,114 +10,43 @@
 // Patients
 // Patient: Id, Name, Address, Phone
 
-var doctors = new List<Doctor>
-{
-	new Doctor(1, "Test Name", "Test"),
-	new Doctor(2, "Test Test", "Testing")
-};
-
-var patients = new List<Patient>();
-
+ 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/doctors", () => doctors);
 
-app.MapGet("/doctors/{id}", (int id) =>
-{
-	var doctor = doctors.FirstOrDefault(d => d.Id == id);
-	if (doctor is null)
-	{
-		return Results.NotFound("Doctor not found!");
-	}
 
-	return Results.Ok(doctor);
-});
+//GEt Doctors
+app.MapGet("doctors",DoctorHandler.GetDoctors);
 
-app.MapPost("/doctors", (Doctor doctor) =>
-{
-	doctors.Add(doctor);
+//Get Doctors/1
 
-	return "Doctor has been saved successfully!";
-});
+app.MapGet("doctors/{id}",DoctorHandler.GetDoctor);
 
-app.MapPut("/doctors/{id}", (int id, Doctor doctor) =>
-{
-	var index = doctors.FindIndex(d => d.Id == id);
-	if (index is -1)
-	{
-		return Results.BadRequest();
-	}
+//Post add doctors
+app.MapPost("doctors",DoctorHandler.AddDoctor);
 
-	doctors[index] = doctor with { Id = id };
+//Put
+app.MapPut("doctors/{id}",DoctorHandler.UpdateDoctor);
 
-	return Results.NoContent();
-});
+//Dele
 
-app.MapDelete("/doctors/{id}", (int id) =>
-{
-	var index = doctors.FindIndex(d => d.Id == id);
-	if (index is -1)
-	{
-		return Results.BadRequest("Doctor not found.");
-	}
+app.MapDelete("doctors{id}",DoctorHandler.DeleteDoctor);
 
-	doctors.RemoveAt(index);
-	return Results.NoContent();
-});
 
-// GET /patients
-app.MapGet("/patients", () => patients);
+//Get Patients 
 
-// GET /patients/5
-app.MapGet("/patients/{id}", (int id) =>
-{
-	var patient = patients.FirstOrDefault(p => p.Id == id);
-	if (patient is null)
-	{
-		return Results.NotFound();
-	}
+app.MapGet("patients",PateintHandler.GetPatients);
 
-	return Results.Ok(patient);
-});
+app.MapGet("patients/{id}",PateintHandler.GetPatient);
+//Add Patien
+app.MapPost("patients",PateintHandler.AddPatient);
 
-// POST /patients
-app.MapPost("/patients", (Patient patient) =>
-{
-	patient.Id = patients.Count + 1;
-	patients.Add(patient);
+app.MapPut("patients/{id}", PateintHandler.UpatePatient);
 
-	return Results.Created("/patients/" + patient.Id, patient);
-});
+//Delet
+app.MapDelete("patients/{id}",PateintHandler.DeletePatient);
 
-// PUT /patients/5
-app.MapPut("/patients/{id}", (int id, Patient patient) =>
-{
-	var targetPatient = patients.FirstOrDefault(p => p.Id == id);
-	if (targetPatient is null)
-	{
-		return Results.BadRequest("Patient could not be recognized.");
-	}
-
-	targetPatient.Name = patient.Name;
-	targetPatient.Address = patient.Address;
-	targetPatient.Phone = patient.Phone;
-
-	return Results.NoContent();
-});
-
-// DELETE /patients/5
-app.MapDelete("/patients/{id}", (int id) =>
-{
-	var patient = patients.FirstOrDefault(p => p.Id == id);
-	if (patient is null)
-	{
-		return Results.BadRequest("Patient could not be recognized.");
-	}
-
-	patients.Remove(patient);
-	return Results.NoContent();
-});
 
 // Drug: Id, Name, Quantity, Description, Origin, Price
 // GET /drugs
