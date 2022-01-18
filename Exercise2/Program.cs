@@ -66,58 +66,6 @@ app.MapDelete("/doctors/{id}", (int id) =>
 	return Results.NoContent();
 });
 
-// GET /patients
-app.MapGet("/patients", () => patients);
-
-// GET /patients/5
-app.MapGet("/patients/{id}", (int id) =>
-{
-	var patient = patients.FirstOrDefault(p => p.Id == id);
-	if (patient is null)
-	{
-		return Results.NotFound();
-	}
-
-	return Results.Ok(patient);
-});
-
-// POST /patients
-app.MapPost("/patients", (Patient patient) =>
-{
-	patient.Id = patients.Count + 1;
-	patients.Add(patient);
-
-	return Results.Created("/patients/" + patient.Id, patient);
-});
-
-// PUT /patients/5
-app.MapPut("/patients/{id}", (int id, Patient patient) =>
-{
-	var targetPatient = patients.FirstOrDefault(p => p.Id == id);
-	if (targetPatient is null)
-	{
-		return Results.BadRequest("Patient could not be recognized.");
-	}
-
-	targetPatient.Name = patient.Name;
-	targetPatient.Address = patient.Address;
-	targetPatient.Phone = patient.Phone;
-
-	return Results.NoContent();
-});
-
-// DELETE /patients/5
-app.MapDelete("/patients/{id}", (int id) =>
-{
-	var patient = patients.FirstOrDefault(p => p.Id == id);
-	if (patient is null)
-	{
-		return Results.BadRequest("Patient could not be recognized.");
-	}
-
-	patients.Remove(patient);
-	return Results.NoContent();
-});
 
 // Drug: Id, Name, Quantity, Description, Origin, Price
 // GET /drugs
@@ -136,5 +84,23 @@ app.MapPut("/drugs/{id}", DrugHandler.UpdateDrug);
 app.MapDelete("/drugs/{id}", DrugHandler.DeleteDrug);
 
 // TODO: Refactor the other endpoints.
+
+
+// Patient: Id, Name, Address, phone
+// GET /Patients
+app.MapGet("/Patients", PatientHandler.GetPatients);
+
+// GET /Patients/5
+app.MapGet("/Patiets/{id}", PatientHandler.GetPatient);
+
+// POST /Patients
+app.MapPost("/Patients", PatientHandler.AddPatient);
+
+// PUT /Patients/5
+app.MapPut("/Patients/{id}", PatientHandler.UpdatePatient);
+
+// DELETE /Patients/5
+app.MapDelete("/Patients/{id}", PatientHandler.DeletePatient);
+
 
 app.Run();
